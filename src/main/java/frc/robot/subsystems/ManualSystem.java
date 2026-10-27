@@ -6,9 +6,8 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import java.lang.management.MemoryType;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -32,11 +31,11 @@ public class ManualSystem extends SubsystemBase {
     private final DifferentialDrive drive;
 
   public ManualSystem() {
-    LBMotor = new SparkMax(0, MotorType.kBrushless);
-    LFMotor = new SparkMax(0, MotorType.kBrushless);
-    RBMotor = new SparkMax(0, MotorType.kBrushless);
-    RFMotor = new SparkMax(0, MotorType.kBrushless);
-
+    LBMotor = new SparkMax(8, MotorType.kBrushless);
+    LFMotor = new SparkMax(2, MotorType.kBrushless);
+    RBMotor = new SparkMax(1, MotorType.kBrushless);
+    RFMotor = new SparkMax(3, MotorType.kBrushless);
+    //這裡裡要看Spark Max的ID去設編號
     LFConfig = new SparkMaxConfig();
     LBConfig = new SparkMaxConfig();
     RBConfig = new SparkMaxConfig();
@@ -46,13 +45,13 @@ public class ManualSystem extends SubsystemBase {
 
     LFConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(60);
     LBConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(60).follow(LFMotor.getDeviceId());
-    RFConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(60);
-    RBConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(60).follow(RFMotor.getDeviceId());
-
-    LFMotor.configure(LBConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    RFConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(60);
+    RBConfig.inverted(false).idleMode(IdleMode.kBrake).smartCurrentLimit(60).follow(RFMotor.getDeviceId());
+  //這裡inverted要測試才知知道馬達的正反轉
+    LFMotor.configure(LFConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     LBMotor.configure(LBConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-    RFMotor.configure(LBConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-    RBMotor.configure(LBConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    RFMotor.configure(RFConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    RBMotor.configure(RBConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
   }
 
@@ -63,5 +62,13 @@ public class ManualSystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+   SmartDashboard.putNumber("LFmotor", LFMotor.getEncoder().getPosition());
+   SmartDashboard.putNumber("LBmotor", LBMotor.getEncoder().getPosition());
+   SmartDashboard.putNumber("RFmotor", RFMotor.getEncoder().getPosition());
+   SmartDashboard.putNumber("RBmotor", RBMotor.getEncoder().getPosition());
+   SmartDashboard.putNumber("LFVelocity", LFMotor.getEncoder().getVelocity());
+   SmartDashboard.putNumber("LBVelocity", LBMotor.getEncoder().getVelocity());
+   SmartDashboard.putNumber("RFVelocity", RFMotor.getEncoder().getVelocity());
+   SmartDashboard.putNumber("RBVelocity", RBMotor.getEncoder().getVelocity());
   }
 }

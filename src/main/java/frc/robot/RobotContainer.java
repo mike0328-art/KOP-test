@@ -4,10 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualDrive;
 import frc.robot.subsystems.ManualSystem;
+import frc.robot.subsystems.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   private final CommandXboxController driveController = new CommandXboxController(0);
   private final ManualSystem m_ManualSystem = new ManualSystem();
+  private final shooter m_Shooter = new shooter();
  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -35,13 +37,14 @@ public class RobotContainer {
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasse%s for {@link
    * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
-    
+    driveController.a().whileTrue(Commands.runEnd(()->m_Shooter.strongshoot(),()->m_Shooter.shootStop(),m_Shooter));
+    driveController.b().and(driveController.a().negate()).whileTrue(Commands.runEnd(()->m_Shooter.weakshoot(),()->m_Shooter.shootStop(),m_Shooter));
   }
 
   /**
