@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -17,6 +19,10 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  private String shift = "null";
+  private String ledShift = "null";
+  private double nowTime;
+  private String specialMessage = "null";
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,6 +48,36 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+        nowTime = DriverStation.getMatchTime();
+    if(DriverStation.isAutonomousEnabled()) {
+      shift = "Auto";
+    }
+    if (DriverStation.isTeleopEnabled()) {
+      if (nowTime > 130) {
+        shift = "TransionShift";
+        nowTime = DriverStation.getMatchTime() - 130;
+      }else if(nowTime > 105){
+        shift = "Shift 1";
+        nowTime = DriverStation.getMatchTime() - 105;
+      }else if(nowTime > 80){
+        shift = "Shift 2";
+        nowTime = DriverStation.getMatchTime() - 80;
+      }else if(nowTime > 55){
+        shift = "Shift 3";
+        nowTime = DriverStation.getMatchTime() - 55;
+      }else if(nowTime > 30){
+        shift = "Shift 4";
+        nowTime = DriverStation.getMatchTime() - 30;
+      }else{
+        shift = "EndGame";
+        nowTime = DriverStation.getMatchTime();
+      }
+    }
+    SmartDashboard.putString("GameSpecialMessage", specialMessage);
+    SmartDashboard.putNumber("MatchTime", DriverStation.getMatchTime());
+    SmartDashboard.putNumber("ShiftTime", nowTime);
+    SmartDashboard.putString("Alliance Shift", shift);
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -72,9 +108,11 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    specialMessage = DriverStation.getGameSpecificMessage();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    SmartDashboard.putString("SpecialMessage", specialMessage);
   }
 
   /** This function is called periodically during operator control. */

@@ -31,11 +31,11 @@ public class ManualSystem extends SubsystemBase {
     private final DifferentialDrive drive;
 
   public ManualSystem() {
-    LBMotor = new SparkMax(8, MotorType.kBrushless);
-    LFMotor = new SparkMax(2, MotorType.kBrushless);
-    RBMotor = new SparkMax(1, MotorType.kBrushless);
+    LBMotor = new SparkMax(2, MotorType.kBrushless);
+    LFMotor = new SparkMax(1, MotorType.kBrushless);
+    RBMotor = new SparkMax(4, MotorType.kBrushless);
     RFMotor = new SparkMax(3, MotorType.kBrushless);
-    //這裡裡要看Spark Max的ID去設編號
+    //這裡裡要看Spark Max的ID去設編號2
     LFConfig = new SparkMaxConfig();
     LBConfig = new SparkMaxConfig();
     RBConfig = new SparkMaxConfig();
@@ -70,5 +70,9 @@ public class ManualSystem extends SubsystemBase {
    SmartDashboard.putNumber("LBVelocity", LBMotor.getEncoder().getVelocity());
    SmartDashboard.putNumber("RFVelocity", RFMotor.getEncoder().getVelocity());
    SmartDashboard.putNumber("RBVelocity", RBMotor.getEncoder().getVelocity());
+   SmartDashboard.putNumber("LFtem", LFMotor.getMotorTemperature());
+   SmartDashboard.putNumber("LBtem", LBMotor.getMotorTemperature());
+   SmartDashboard.putNumber("RFtem", RFMotor.getMotorTemperature());
+   SmartDashboard.putNumber("RBtem", RBMotor.getMotorTemperature());
   }
 }

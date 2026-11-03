@@ -59,12 +59,21 @@ private boolean tempsoHigh;
     else shootMotorR.setVoltage(RightshootSpeed);
   }
   public void strongshoot(){
-    LeftshootSpeed = 7;
-    RightshootSpeed = 7;
+    LeftshootSpeed = 8;
+    RightshootSpeed = 6.5;
   }
-  public void weakshoot(){
-    LeftshootSpeed = 6;
-    RightshootSpeed = 3;
+  public void AAshoot(){
+    LeftshootSpeed = 8;
+    RightshootSpeed = 4.5;
+  }
+  public void BBshoo(){
+    LeftshootSpeed = 8;
+    RightshootSpeed = 8.5;
+  }
+
+  public void intake(){
+    LeftshootSpeed = -12;
+    RightshootSpeed = 7;
   }
   public void shootStop(){
     LeftshootSpeed = 0;

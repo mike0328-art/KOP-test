@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ManualSystem;
 
@@ -14,6 +16,10 @@ public class ManualDrive extends Command {
   private final ManualSystem m_ManualSystem;
   private final DoubleSupplier xspeedfunc;
   private final DoubleSupplier turnspeedfunc;
+
+  private final SlewRateLimiter xLimiter;
+  private final SlewRateLimiter turnLimiter;
+  
   private double xspeed;
   private double turnspeed;
   /** Creates a new ManualDrive. */
@@ -21,6 +27,8 @@ public class ManualDrive extends Command {
     this.m_ManualSystem = drivSystem;
     this.xspeedfunc = xspeedfunc;
     this.turnspeedfunc = turnspeedfunc;
+    this.xLimiter = new SlewRateLimiter(5);
+    this.turnLimiter = new SlewRateLimiter(5);
     addRequirements(m_ManualSystem);
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,7 +43,11 @@ public class ManualDrive extends Command {
   public void execute() {
     xspeed = xspeedfunc.getAsDouble();
     turnspeed = turnspeedfunc.getAsDouble();
-    m_ManualSystem.manualSystem(xspeed*0.6, turnspeed*0.6);
+    m_ManualSystem.manualSystem(xspeed*0.7, turnspeed*0.7);
+    xspeed = xLimiter.calculate(this.xspeed);
+    turnspeed = turnLimiter.calculate(this.turnspeed);
+    SmartDashboard.putNumber("xspeed", xspeed);
+    SmartDashboard.putNumber("turnspeed", turnspeed);
   }
 
   // Called once the command ends or is interrupted.
